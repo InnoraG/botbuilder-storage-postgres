@@ -66,6 +66,11 @@ export class PostgresStorage implements Storage {
     const sequelize = new Sequelize(this.config.uri, {
       // ...options
       dialect: "postgres",
+      dialectOptions: {
+        ssl: {
+           rejectUnauthorized: false
+        }
+      },
       pool: {
         max: 10,
         min: 0,
