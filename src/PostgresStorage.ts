@@ -68,7 +68,7 @@ export class PostgresStorage implements Storage {
       dialect: "postgres",
       dialectOptions: {
         ssl: {
-           rejectUnauthorized: false
+          rejectUnauthorized: process.env.HEROKU_APP_NAME ==='undefined'
         }
       },
       pool: {
