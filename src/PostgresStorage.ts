@@ -64,7 +64,7 @@ export class PostgresStorage implements Storage {
 
   public async connect(): Promise<Sequelize> {
     let sequelizeOptions;
-    if (typeof (process.env.HEROKU_APP_NAME) !== 'undefined') {
+    if (typeof (process.env.ONHEROKU) !== 'undefined') {
       sequelizeOptions = {
         // ...options
         dialect: "postgres",
