@@ -78,8 +78,7 @@ export class PostgresStorage implements Storage {
           min: 0,
           acquire: 30000,
           idle: 10000
-        },
-        logging: this.config.logging
+        }
       }
     } else {
       sequelizeOptions = {
@@ -90,8 +89,7 @@ export class PostgresStorage implements Storage {
           min: 0,
           acquire: 30000,
           idle: 10000
-        },
-        logging: this.config.logging
+        }
       }
     }
     const sequelize = new Sequelize(this.config.uri, sequelizeOptions);
