@@ -63,22 +63,38 @@ export class PostgresStorage implements Storage {
   }
 
   public async connect(): Promise<Sequelize> {
-    const sequelize = new Sequelize(this.config.uri, {
-      // ...options
-      dialect: "postgres",
-      dialectOptions: {
-        ssl: {
-          rejectUnauthorized: process.env.HEROKU_APP_NAME ==='undefined'
-        }
-      },
-      pool: {
-        max: 10,
-        min: 0,
-        acquire: 30000,
-        idle: 10000
-      },
-      logging: this.config.logging
-    });
+    let sequelizeOptions;
+    if (typeof (process.env.HEROKU_APP_NAME) !== 'undefined') {
+      sequelizeOptions = {
+        // ...options
+        dialect: "postgres",
+        dialectOptions: {
+          ssl: {
+            rejectUnauthorized: false
+          }
+        },
+        pool: {
+          max: 10,
+          min: 0,
+          acquire: 30000,
+          idle: 10000
+        },
+        logging: this.config.logging
+      }
+    } else {
+      sequelizeOptions = {
+        // ...options
+        dialect: "postgres",
+        pool: {
+          max: 10,
+          min: 0,
+          acquire: 30000,
+          idle: 10000
+        },
+        logging: this.config.logging
+      }
+    }
+    const sequelize = new Sequelize(this.config.uri, sequelizeOptions);
     await PostgresStoreItem.init(
       {
         id: {
