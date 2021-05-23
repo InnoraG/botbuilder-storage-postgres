@@ -64,7 +64,19 @@ export class PostgresStorage implements Storage {
 
   public async connect(): Promise<Sequelize> {
     let sequelizeOptions;
-    if (typeof (process.env.ONHEROKU) !== 'undefined') {
+    if (process.env.POSTGRES_URI.indexOf('localhost') > 0) {
+      sequelizeOptions = {
+        // ...options
+        dialect: "postgres",
+        pool: {
+          max: 10,
+          min: 0,
+          acquire: 30000,
+          idle: 10000
+        },
+        logging: this.config.logging
+      }
+    } else {
       sequelizeOptions = {
         // ...options
         dialect: "postgres",
@@ -78,18 +90,8 @@ export class PostgresStorage implements Storage {
           min: 0,
           acquire: 30000,
           idle: 10000
-        }
-      }
-    } else {
-      sequelizeOptions = {
-        // ...options
-        dialect: "postgres",
-        pool: {
-          max: 10,
-          min: 0,
-          acquire: 30000,
-          idle: 10000
-        }
+        },
+        logging: this.config.logging
       }
     }
     const sequelize = new Sequelize(this.config.uri, sequelizeOptions);
